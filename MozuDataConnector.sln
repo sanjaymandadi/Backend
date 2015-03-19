@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MozuDataConnector.Test", "MozuDataConnector.Test\MozuDataConnector.Test.csproj", "{1915667D-DF66-498C-83A4-642DD841A170}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MozuDataConnector.Domain", "MozuDataConnector.Domain\MozuDataConnector.Domain.csproj", "{91AB3190-4D95-4FDF-99DD-F7904EBEFCCA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MozuDataConnector.Web", "MozuDataConnector.Web\MozuDataConnector.Web.csproj", "{3627B836-FF3C-4AA4-97C6-D303E8FF5E37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{91AB3190-4D95-4FDF-99DD-F7904EBEFCCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91AB3190-4D95-4FDF-99DD-F7904EBEFCCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91AB3190-4D95-4FDF-99DD-F7904EBEFCCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3627B836-FF3C-4AA4-97C6-D303E8FF5E37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3627B836-FF3C-4AA4-97C6-D303E8FF5E37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3627B836-FF3C-4AA4-97C6-D303E8FF5E37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3627B836-FF3C-4AA4-97C6-D303E8FF5E37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
