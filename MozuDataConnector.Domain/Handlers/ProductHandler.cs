@@ -11,7 +11,18 @@ namespace MozuDataConnector.Domain.Handlers
     public class ProductHandler
     { 
         private Mozu.Api.IApiContext _apiContext;
-    
+
+        public async Task<Mozu.Api.Contracts.ProductAdmin.Product> GetProduct(int tenantId, int? siteId,
+            int? masterCatalogId, string productCode)
+        {
+            _apiContext = new ApiContext(tenantId, siteId, masterCatalogId);
+
+            var productResource = new ProductResource(_apiContext);
+            var product = await productResource.GetProductAsync(productCode, null);
+
+            return product;
+        }
+
         public async Task<IEnumerable<Mozu.Api.Contracts.ProductAdmin.Product>> GetProducts(int tenantId, int? siteId,
             int? masterCatalogId, int? startIndex, int? pageSize, string sortBy = null, string filter = null)
         {
@@ -26,12 +37,29 @@ namespace MozuDataConnector.Domain.Handlers
         public async Task<Mozu.Api.Contracts.ProductAdmin.Product> AddProduct(int tenantId, int? siteId,
             int? masterCatalogId, Mozu.Api.Contracts.ProductAdmin.Product product)
         {
-            _apiContext = new ApiContext(tenantId, siteId, masterCatalogId);
+            try
+            {
+                _apiContext = new ApiContext(tenantId, siteId);
 
-            var productResource = new ProductResource(_apiContext);
-            var newProduct = await productResource.AddProductAsync(product, null);
+                var productResource = new ProductResource(_apiContext);
+                var newProduct = await productResource.AddProductAsync(product);
+          
+                return newProduct;
+            }
+            catch(AggregateException ae)
+            {
 
-            return newProduct;
+            }
+            catch(ApiException ap)
+            {
+
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+            return null;
         }
 
         public async Task<Mozu.Api.Contracts.ProductAdmin.Product> UpdateProduct(int tenantId, int? siteId,

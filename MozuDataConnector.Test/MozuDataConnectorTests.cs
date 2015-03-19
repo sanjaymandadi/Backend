@@ -441,12 +441,91 @@ namespace MozuDataConnector.Test
         [TestMethod]
         public void Get_Purse_Product()
         {
-            var filter = "productcode eq " + "'LUC-TOP-001'";
-
             var productHandler = new MozuDataConnector.Domain.Handlers.ProductHandler();
 
-            var products = productHandler.GetProducts(_apiContext.TenantId, _apiContext.SiteId,
-                _apiContext.MasterCatalogId, 0, 20, null, filter).Result;
+            var products = productHandler.GetProduct(_apiContext.TenantId, _apiContext.SiteId,
+                _apiContext.MasterCatalogId, "LUC-TOP-001").Result;
+        }
+
+        [TestMethod]
+        public void Add_Sunglasses_Product()
+        {
+            var productTypeHandler = new MozuDataConnector.Domain.Handlers.ProductTypeHandler();
+
+            var productTypes = productTypeHandler.GetProductTypes(_apiContext.TenantId, _apiContext.SiteId,
+                _apiContext.MasterCatalogId, 0, 20, null, "name eq 'Sunglasses'").Result;
+            
+            var existingProductType = productTypes.SingleOrDefault(a => a.Name == "Sunglasses");
+
+            if (existingProductType != null)
+            {
+                var productCode = "LUC-SUN-001";
+
+                var productHandler = new MozuDataConnector.Domain.Handlers.ProductHandler();
+                var existingProduct = productHandler.GetProduct(_apiContext.TenantId, _apiContext.SiteId,
+                    _apiContext.MasterCatalogId, productCode).Result;
+
+                if (existingProduct == null)
+                {
+                    var product = new Product()
+                    {
+                        ProductCode = productCode,
+                        ProductUsage = "Configurable",
+                        FulfillmentTypesSupported = new System.Collections.Generic.List<string> { "DirectShip" },
+                        MasterCatalogId = 1,//_apiContext.MasterCatalogId,
+                        ProductTypeId = existingProductType.Id,
+                        IsValidForProductType = true,         
+                        ProductInCatalogs = new System.Collections.Generic.List<ProductInCatalogInfo>
+                        {
+                            new ProductInCatalogInfo()
+                            { 
+                                //CatalogId = Convert.ToInt32(_apiContext.CatalogId),
+                                IsActive = true,
+                                IsContentOverridden = false,
+                                IsPriceOverridden = false,
+                                IsseoContentOverridden = false
+                            }
+                        },
+                        HasConfigurableOptions = true,
+                        HasStandAloneOptions = false,
+                        IsVariation = false,
+                        Content = new ProductLocalizedContent()
+                        {
+                            LocaleCode = "en-US",
+                            ProductShortDescription = "This minimalistic design is a great fit for those seeking adventure.",
+                            ProductName = "Commander Sunglasses",
+                        },
+                        Price = new ProductPrice() 
+                        {
+                             Price = 685.00m,
+                             SalePrice = 615.00m
+                        },
+                        PackageWeight = new Mozu.Api.Contracts.Core.Measurement()
+                        {
+                            Unit = "lbs",
+                            Value = .5m
+                        },
+                        PackageLength = new Mozu.Api.Contracts.Core.Measurement()
+                        {
+                             Unit = "in",
+                             Value = 3.75m
+                        },
+                        PackageWidth = new Mozu.Api.Contracts.Core.Measurement()
+                        {
+                             Unit = "in",
+                             Value = 5.5m
+                        },
+                        PackageHeight = new Mozu.Api.Contracts.Core.Measurement()
+                        {
+                             Unit = "in",
+                             Value = 1.85m
+                        }
+                    };
+
+                    var newProduct = productHandler.AddProduct(_apiContext.TenantId, _apiContext.SiteId,
+                        _apiContext.MasterCatalogId, product).Result;
+                }
+            }
         }
     }
 }
