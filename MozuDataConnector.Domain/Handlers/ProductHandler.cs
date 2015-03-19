@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace MozuDataConnector.Domain.Handlers
 {
     public class ProductHandler
-    {
+    { 
         private Mozu.Api.IApiContext _apiContext;
     
         public async Task<IEnumerable<Mozu.Api.Contracts.ProductAdmin.Product>> GetProducts(int tenantId, int? siteId,
