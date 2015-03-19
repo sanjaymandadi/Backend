@@ -60,7 +60,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Handlers\AttributeHandlers.cs" />
+    <Compile Include="Handlers\AttributeHandler.cs" />
+    <Compile Include="Handlers\ProductTypeHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

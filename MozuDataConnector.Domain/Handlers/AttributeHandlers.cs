@@ -22,5 +22,27 @@ namespace MozuDataConnector.Domain.Handlers
 
             return attributes.Items;
         }
+
+        public async Task<Mozu.Api.Contracts.ProductAdmin.Attribute> AddAttribute(int tenantId, int? siteId,
+            int? masterCatalogId, Mozu.Api.Contracts.ProductAdmin.Attribute attribute)
+        {
+            _apiContext = new ApiContext(tenantId, siteId, masterCatalogId);
+
+            var attributeResource = new AttributeResource(_apiContext);
+            var newAttribute = await attributeResource.AddAttributeAsync(attribute, null);
+
+            return newAttribute;
+        }
+
+        public async Task<Mozu.Api.Contracts.ProductAdmin.Attribute> UpdateAttribute(int tenantId, int? siteId,
+            int? masterCatalogId, Mozu.Api.Contracts.ProductAdmin.Attribute attribute)
+        {
+            _apiContext = new ApiContext(tenantId, siteId, masterCatalogId);
+
+            var attributeResource = new AttributeResource(_apiContext);
+            var updatedAttribute = await attributeResource.UpdateAttributeAsync(attribute, attribute.AttributeFQN, null);
+
+            return updatedAttribute;
+        }
     }
 }
