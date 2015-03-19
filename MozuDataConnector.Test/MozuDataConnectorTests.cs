@@ -8,8 +8,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MozuDataConnector.Test
 {
-
-
     [TestClass]
     public class MozuDataConnectorTests
     {
@@ -27,11 +25,20 @@ namespace MozuDataConnector.Test
 
             _apiContext = new ApiContext(tenantId, siteId);
         }
-
+    
         [TestMethod]
         public void Should_Connect_To_Tenant()
         {
             var tenantResource = new TenantResource(_apiContext);
+        }
+        
+        [TestMethod]
+        public void Get_Attributes()
+        {
+            var attributeHandler = new MozuDataConnector.Domain.Handlers.AttributeHandler();
+            
+            var attributes = attributeHandler.GetAttributes(_apiContext.TenantId, _apiContext.SiteId, 
+                _apiContext.MasterCatalogId, 0, 20, null, null).Result;
         }
     }
 }
