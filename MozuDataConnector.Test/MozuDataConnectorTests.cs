@@ -479,26 +479,73 @@ namespace MozuDataConnector.Test
                         {
                             new ProductInCatalogInfo()
                             { 
-                                //CatalogId = Convert.ToInt32(_apiContext.CatalogId),
+                                CatalogId = 1,
                                 IsActive = true,
                                 IsContentOverridden = false,
+                                 Content = new ProductLocalizedContent()
+                                 {
+                                     LocaleCode = "en-US",
+                                     ProductName = "Commander Sunglasses", 
+                                     ProductShortDescription = "This minimalistic design is a great fit for those seeking adventure.",
+                                 },
                                 IsPriceOverridden = false,
-                                IsseoContentOverridden = false
+                                Price = new ProductPrice()
+                                {
+                                     Price = 685.00m,
+                                     SalePrice = 615.00m
+                                },
+                                IsseoContentOverridden = false,
+                                SeoContent = new ProductLocalizedSEOContent()
+                                {
+                                     LocaleCode = "en-US",
+                                     MetaTagTitle = "Euro Commander Sunglasses",
+                                     SeoFriendlyUrl = "euro-commander-sunglasses"
+                                },
                             }
                         },
                         HasConfigurableOptions = true,
                         HasStandAloneOptions = false,
                         IsVariation = false,
+                        IsTaxable = false,
+                        InventoryInfo = new ProductInventoryInfo()
+                        { 
+                            ManageStock = false
+                        },
+                        IsRecurring = false,
+                        SupplierInfo = new ProductSupplierInfo()
+                        {
+                             Cost = new ProductCost() 
+                             {
+                                  Cost = 0m,
+                                  IsoCurrencyCode = "USD"
+                             }
+                        },
+                         IsPackagedStandAlone = false,
+                         StandAlonePackageType = "CUSTOM",
+                          PublishingInfo = new ProductPublishingInfo()
+                          {
+                               PublishedState = "Live"
+                          },
                         Content = new ProductLocalizedContent()
                         {
                             LocaleCode = "en-US",
                             ProductShortDescription = "This minimalistic design is a great fit for those seeking adventure.",
                             ProductName = "Commander Sunglasses",
                         },
+                        SeoContent = new ProductLocalizedSEOContent()
+                        {
+                            LocaleCode = "en-US",
+                            MetaTagTitle = "Euro Commander Sunglasses",
+                            SeoFriendlyUrl = "euro-commander-sunglasses"
+                        },
                         Price = new ProductPrice() 
                         {
                              Price = 685.00m,
                              SalePrice = 615.00m
+                        },
+                        PricingBehavior = new ProductPricingBehaviorInfo()
+                        { 
+                            DiscountsRestricted = false
                         },
                         PackageWeight = new Mozu.Api.Contracts.Core.Measurement()
                         {
