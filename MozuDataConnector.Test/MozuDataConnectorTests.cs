@@ -428,5 +428,25 @@ namespace MozuDataConnector.Test
                     _apiContext.MasterCatalogId, existingProductType).Result;
             }
         }
+
+        [TestMethod]
+        public void Get_Products()
+        {
+            var productHandler = new MozuDataConnector.Domain.Handlers.ProductHandler();
+
+            var products = productHandler.GetProducts(_apiContext.TenantId, _apiContext.SiteId,
+                _apiContext.MasterCatalogId, 0, 20, null, null).Result;
+        }
+
+        [TestMethod]
+        public void Get_Purse_Product()
+        {
+            var filter = "productcode eq " + "'LUC-TOP-001'";
+
+            var productHandler = new MozuDataConnector.Domain.Handlers.ProductHandler();
+
+            var products = productHandler.GetProducts(_apiContext.TenantId, _apiContext.SiteId,
+                _apiContext.MasterCatalogId, 0, 20, null, filter).Result;
+        }
     }
 }
