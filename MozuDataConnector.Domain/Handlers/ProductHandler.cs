@@ -37,29 +37,12 @@ namespace MozuDataConnector.Domain.Handlers
         public async Task<Mozu.Api.Contracts.ProductAdmin.Product> AddProduct(int tenantId, int? siteId,
             int? masterCatalogId, Mozu.Api.Contracts.ProductAdmin.Product product)
         {
-            try
-            {
-                _apiContext = new ApiContext(tenantId, siteId);
+            _apiContext = new ApiContext(tenantId, siteId);
 
-                var productResource = new ProductResource(_apiContext);
-                var newProduct = await productResource.AddProductAsync(product);
+            var productResource = new ProductResource(_apiContext);
+            var newProduct = await productResource.AddProductAsync(product);
           
-                return newProduct;
-            }
-            catch(AggregateException ae)
-            {
-
-            }
-            catch(ApiException ap)
-            {
-
-            }
-            catch(Exception ex)
-            {
-
-            }
-
-            return null;
+            return newProduct;
         }
 
         public async Task<Mozu.Api.Contracts.ProductAdmin.Product> UpdateProduct(int tenantId, int? siteId,
