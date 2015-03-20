@@ -49,7 +49,7 @@ namespace MozuDataConnector.Domain.Handlers
             return newAccount;
         }
 
-        public async Task<CustomerAccount> UpdateProduct(int tenantId, int? siteId,
+        public async Task<CustomerAccount> UpdateCustomerAccount(int tenantId, int? siteId,
             int? masterCatalogId, CustomerAccount account)
         {
             _apiContext = new ApiContext(tenantId, siteId, masterCatalogId);
@@ -59,6 +59,52 @@ namespace MozuDataConnector.Domain.Handlers
                 account.Id);
 
             return updatedAccount;
+        }
+
+        public async Task<CustomerContact> GetCustomerContact(int tenantId, int? siteId,
+            int? masterCatalogId, int accountId, int contactId)
+        {
+            _apiContext = new ApiContext(tenantId, siteId, masterCatalogId);
+
+            var customerContactResource = new CustomerContactResource(_apiContext);
+            var contact = await customerContactResource.GetAccountContactAsync(accountId, contactId);
+
+            return contact;
+        }
+
+        public async Task<IEnumerable<CustomerContact>> GetCustomerContacts(int accountId, int tenantId, 
+            int? siteId, int? masterCatalogId, int? startIndex, int? pageSize, string sortBy = null, string filter = null)
+        {
+            _apiContext = new ApiContext(tenantId, siteId, masterCatalogId);
+
+            var customerContactResource = new CustomerContactResource(_apiContext);
+            var contacts = await customerContactResource.GetAccountContactsAsync(accountId, startIndex, 
+                pageSize, sortBy, filter, null);
+
+            return contacts.Items;
+        }
+
+        public async Task<CustomerContact> AddCustomerContact(int accountId, CustomerContact contact, 
+            int tenantId, int? siteId, int? masterCatalogId)
+        {
+            _apiContext = new ApiContext(tenantId, siteId);
+
+            var customerContactResource = new CustomerContactResource(_apiContext);
+            var newContact = await customerContactResource.AddAccountContactAsync(contact, accountId);
+
+            return newContact;
+        }
+
+        public async Task<CustomerContact> UpdateCustomerContact(int tenantId, int? siteId,
+            int? masterCatalogId, CustomerContact contact)
+        {
+            _apiContext = new ApiContext(tenantId, siteId, masterCatalogId);
+
+            var customerContactResource = new CustomerContactResource(_apiContext);
+            var updatedcontact = await customerContactResource.UpdateAccountContactAsync(contact,
+                contact.AccountId, contact.Id);
+
+            return updatedcontact;
         }
     }
 }
