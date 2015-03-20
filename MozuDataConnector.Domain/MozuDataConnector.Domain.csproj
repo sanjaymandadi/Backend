@@ -61,7 +61,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Handlers\ApplicationEventHandler.cs" />
     <Compile Include="Handlers\AttributeHandler.cs" />
+    <Compile Include="Handlers\OrderEventHandler.cs" />
     <Compile Include="Handlers\ProductHandler.cs" />
     <Compile Include="Handlers\ProductTypeHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
