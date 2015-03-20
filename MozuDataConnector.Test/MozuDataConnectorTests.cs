@@ -444,7 +444,7 @@ namespace MozuDataConnector.Test
             var productHandler = new MozuDataConnector.Domain.Handlers.ProductHandler();
 
             var products = productHandler.GetProduct(_apiContext.TenantId, _apiContext.SiteId,
-                _apiContext.MasterCatalogId, "LUC-TOP-001").Result;
+                _apiContext.MasterCatalogId, "LUC-sun-002").Result;
         }
 
         [TestMethod]
@@ -574,5 +574,141 @@ namespace MozuDataConnector.Test
                 }
             }
         }
+
+        [TestMethod]
+        public void Update_Sunglasses_Properties_Product()
+        {
+            var productCode = "LUC-SUN-001";
+
+            var productHandler = new MozuDataConnector.Domain.Handlers.ProductHandler();
+            var existingProduct = productHandler.GetProduct(_apiContext.TenantId, _apiContext.SiteId,
+                _apiContext.MasterCatalogId, productCode).Result;
+
+            if (existingProduct != null)
+            {
+                existingProduct.Properties = new System.Collections.Generic.List<ProductProperty>();
+
+                existingProduct.Properties.Add(new ProductProperty()
+                {
+                     AttributeFQN = "tenant~product-crosssell",
+                      Values = new System.Collections.Generic.List<ProductPropertyValue>() 
+                      {
+                          new ProductPropertyValue()
+                          {
+                               Value = "LUC-SCF-001",
+                                Content = new ProductPropertyValueLocalizedContent()
+                                {
+                                     LocaleCode = "en-US",
+                                     StringValue = "LUC-SCF-001"
+                                },
+                          }
+                      }
+                });
+
+                existingProduct.Properties.Add(new ProductProperty()
+                {
+                    AttributeFQN = "tenant~sunglass-protection",
+                    Values = new System.Collections.Generic.List<ProductPropertyValue>() 
+                      {
+                          new ProductPropertyValue()
+                          {
+                               Value = "90% UV Protected",
+                                Content = new ProductPropertyValueLocalizedContent()
+                                {
+                                     LocaleCode = "en-US",
+                                     StringValue = "90% UV Protected"
+                                },
+                          }
+                      }
+                });
+
+                existingProduct.Properties.Add(new ProductProperty()
+                {
+                    AttributeFQN = "tenant~sunglass-style",
+                    Values = new System.Collections.Generic.List<ProductPropertyValue>() 
+                      {
+                          new ProductPropertyValue()
+                          {
+                               Value = "Pilot",
+                                AttributeVocabularyValueDetail = new AttributeVocabularyValue()
+                                {
+                                    Content = new AttributeVocabularyValueLocalizedContent()
+                                    {
+                                         LocaleCode = "en-US",
+                                         StringValue = "Pilot"
+                                    },                                                                   
+                                },
+                          },
+                          new ProductPropertyValue()
+                          {
+                               Value = "Rectangle",
+                                AttributeVocabularyValueDetail = new AttributeVocabularyValue()
+                                {
+                                    Content = new AttributeVocabularyValueLocalizedContent()
+                                    {
+                                         LocaleCode = "en-US",
+                                         StringValue = "Rectangle"
+                                    },                                                                   
+                                },
+                          }
+                      }
+                });
+
+                var newProduct = productHandler.UpdateProduct(_apiContext.TenantId, _apiContext.SiteId, 
+                    _apiContext.MasterCatalogId, existingProduct).Result;
+            }
+        }
+
+        [TestMethod]
+        public void Update_Sunglasses_Options_Product()
+        {
+            var productCode = "LUC-SUN-001";
+
+            var productHandler = new MozuDataConnector.Domain.Handlers.ProductHandler();
+            var existingProduct = productHandler.GetProduct(_apiContext.TenantId, _apiContext.SiteId,
+                _apiContext.MasterCatalogId, productCode).Result;
+
+            if (existingProduct != null)
+            {
+                existingProduct.Options = new System.Collections.Generic.List<ProductOption>();
+
+                existingProduct.Options.Add(new ProductOption()
+                {
+                    AttributeFQN = "tenant~color", 
+                    Values = new System.Collections.Generic.List<ProductOptionValue>() 
+                    {
+                        new ProductOptionValue()
+                        {
+                             Value = "Black",
+                             AttributeVocabularyValueDetail = new AttributeVocabularyValue()
+                             {
+                                   Value = "Black",
+                                    Content = new AttributeVocabularyValueLocalizedContent()
+                                    {
+                                         LocaleCode = "en-US",
+                                         StringValue = "Black"
+                                    }, 
+                              }
+                        },                        
+                        new ProductOptionValue()
+                        {
+                             Value = "Brown",
+                             AttributeVocabularyValueDetail = new AttributeVocabularyValue()
+                             {
+                                   Value = "Brown",
+                                    Content = new AttributeVocabularyValueLocalizedContent()
+                                    {
+                                         LocaleCode = "en-US",
+                                         StringValue = "Brown"
+                                    }, 
+                              }
+                        }
+                    }
+                });
+
+                var newProduct = productHandler.UpdateProduct(_apiContext.TenantId, _apiContext.SiteId,
+                    _apiContext.MasterCatalogId, existingProduct).Result;
+            }
+        }    
     }
 }
