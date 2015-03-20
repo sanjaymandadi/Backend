@@ -2,6 +2,7 @@
 using Mozu.Api.Resources.Commerce.Customer;
 using Mozu.Api.Resources.Commerce.Customer.Accounts;
 using Mozu.Api.Resources.Commerce.Customer.Credits;
+using Mozu.Api.Contracts.Customer.Credit;
 using Mozu.Api.Resources.Commerce.Customer.Attributedefinition;
 using Mozu.Api.Contracts.Customer;
 using System;
@@ -9,7 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Mozu.Api.Contracts.Customer.Credit;
+using Mozu.Api.Resources.Commerce;
+using Mozu.Api.Resources.Commerce.Customer;
 
 namespace MozuDataConnector.Domain.Handlers
 {
@@ -83,6 +85,29 @@ namespace MozuDataConnector.Domain.Handlers
                     },
                     newAccount.CustomerAccount.Id);
             }
+
+            var wishList = new Mozu.Api.Contracts.CommerceRuntime.Wishlists.Wishlist()
+                {
+                    CustomerAccountId = newAccount.CustomerAccount.Id,
+                    IsImport = true,
+                    Name = "wishlist-001",
+                    Items = new List<Mozu.Api.Contracts.CommerceRuntime.Wishlists.WishlistItem>() 
+                        {
+                            new Mozu.Api.Contracts.CommerceRuntime.Wishlists.WishlistItem()
+                            {
+                                 Product = new Mozu.Api.Contracts.CommerceRuntime.Products.Product()
+                                 {
+                                      ProductCode = "LUC-SCF-001"
+                                 }
+                            }
+                        }
+                };
+            
+            var wishListItemResource = new WishlistResource(_apiContext);
+            var newWishList = await wishListItemResource.CreateWishlistAsync(wishList);
+
+            notes.Add(string.Format("updatedby:{0},updatedDate:{1},action:{2}", newAccount.CustomerAccount.
+                AuditInfo.UpdateBy, newAccount.CustomerAccount.AuditInfo.UpdateDate, "CreateWishlistAsync"));
 
             return newAccount;
         }
