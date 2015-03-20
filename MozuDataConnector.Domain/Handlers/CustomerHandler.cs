@@ -17,6 +17,76 @@ namespace MozuDataConnector.Domain.Handlers
     { 
         private Mozu.Api.IApiContext _apiContext;
 
+        public CustomerHandler()
+        {
+        }
+
+        public CustomerHandler(int tenantId, int? siteId, int? masterCatalogId)
+        {
+            _apiContext = new Mozu.Api.ApiContext(tenantId, siteId);
+        }
+
+        public async Task<CustomerAccount> GetCustomerAccount(int accountId)
+        {
+            var customerAccountResource = new CustomerAccountResource(_apiContext);
+            return await customerAccountResource.GetAccountAsync(accountId);
+        }
+
+        public async Task<IEnumerable<CustomerAccount>> GetCustomerAccounts(int? startIndex, int? pageSize, string sortBy = null, string filter = null)
+        {
+            var customerAccountResource = new CustomerAccountResource(_apiContext);
+            var accounts = await customerAccountResource.GetAccountsAsync(startIndex, pageSize, sortBy, filter, null);
+
+            return accounts.Items;
+        }
+
+        public async Task<CustomerAuthTicket> AddCustomerAccount(CustomerAccountAndAuthInfo account, Credit credit)
+        {
+            var notes = new List<string>();
+
+            var customerAccountResource = new CustomerAccountResource(_apiContext);
+            var newAccount = await customerAccountResource.AddAccountAndLoginAsync(account);
+            
+            notes.Add(string.Format("updatedby:{0},updatedDate:{1},action:{2}", newAccount.CustomerAccount.
+                AuditInfo.UpdateBy,newAccount.CustomerAccount.AuditInfo.UpdateDate, "AddAccountAndLoginAsync"));
+            
+            var customerContactResource = new CustomerContactResource(_apiContext);
+
+            foreach (var contact in account.Account.Contacts)
+            {
+                contact.AccountId = newAccount.CustomerAccount.Id;
+
+                var newContact = await customerContactResource.AddAccountContactAsync(contact, 
+                    newAccount.CustomerAccount.Id);
+
+                notes.Add(string.Format("updatedby:{0},updatedDate:{1},action:{2}", newAccount.CustomerAccount.
+                    AuditInfo.UpdateBy, newAccount.CustomerAccount.AuditInfo.UpdateDate, "AddAccountContactAsync"));
+            }
+
+            var customerCreditResource = new CreditResource(_apiContext);
+
+            credit.CustomerId = newAccount.CustomerAccount.Id;
+
+            var newCredit = await customerCreditResource.AddCreditAsync(credit);
+
+            notes.Add(string.Format("updatedby:{0},updatedDate:{1},action:{2}", newAccount.CustomerAccount.
+                AuditInfo.UpdateBy, newAccount.CustomerAccount.AuditInfo.UpdateDate, "AddCreditAsync"));
+
+            var customerNoteResource = new CustomerNoteResource(_apiContext);
+
+            foreach(var note in notes)
+            {
+                var newNote = await customerNoteResource.AddAccountNoteAsync(
+                    new CustomerNote()
+                    { 
+                        Content = note 
+                    },
+                    newAccount.CustomerAccount.Id);
+            }
+
+            return newAccount;
+        }
+
         public async Task<CustomerAccount> GetCustomerAccount(int tenantId, int? siteId,
             int? masterCatalogId, int accountId)
         {
