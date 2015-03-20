@@ -1,5 +1,9 @@
 ﻿using Mozu.Api;
-using Mozu.Api.Resources.Commerce.Catalog.Admin;
+using Mozu.Api.Resources.Commerce.Customer;
+using Mozu.Api.Resources.Commerce.Customer.Accounts;
+using Mozu.Api.Resources.Commerce.Customer.Credits;
+using Mozu.Api.Resources.Commerce.Customer.Attributedefinition;
+using Mozu.Api.Contracts.Customer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,53 +12,53 @@ using System.Threading.Tasks;
 
 namespace MozuDataConnector.Domain.Handlers
 {
-    public class ProductHandler
+    public class CustomerHandler
     { 
         private Mozu.Api.IApiContext _apiContext;
 
-        public async Task<Mozu.Api.Contracts.ProductAdmin.Product> GetProduct(int tenantId, int? siteId,
-            int? masterCatalogId, string productCode)
+        public async Task<CustomerAccount> GetCustomerAccount(int tenantId, int? siteId,
+            int? masterCatalogId, int accountId)
         {
             _apiContext = new ApiContext(tenantId, siteId, masterCatalogId);
 
-            var productResource = new ProductResource(_apiContext);
-            var product = await productResource.GetProductAsync(productCode, null);
+            var customerAccountResource = new CustomerAccountResource(_apiContext);
+            var account = await customerAccountResource.GetAccountAsync(accountId);
 
-            return product;
+            return account;
         }
 
-        public async Task<IEnumerable<Mozu.Api.Contracts.ProductAdmin.Product>> GetProducts(int tenantId, int? siteId,
+        public async Task<IEnumerable<CustomerAccount>> GetCustomerAccounts(int tenantId, int? siteId,
             int? masterCatalogId, int? startIndex, int? pageSize, string sortBy = null, string filter = null)
         {
             _apiContext = new ApiContext(tenantId, siteId, masterCatalogId);
 
-            var productResource = new ProductResource(_apiContext);
-            var products = await productResource.GetProductsAsync(startIndex, pageSize, sortBy, filter, null);
+            var customerAccountResource = new CustomerAccountResource(_apiContext);
+            var accounts = await customerAccountResource.GetAccountsAsync(startIndex, pageSize, sortBy, filter, null);
 
-            return products.Items;
+            return accounts.Items;
         }
 
-        public async Task<Mozu.Api.Contracts.ProductAdmin.Product> AddProduct(int tenantId, int? siteId,
-            int? masterCatalogId, Mozu.Api.Contracts.ProductAdmin.Product product)
+        public async Task<CustomerAuthTicket> AddCustomerAccount(int tenantId, int? siteId,
+            int? masterCatalogId, CustomerAccountAndAuthInfo account)
         {
             _apiContext = new ApiContext(tenantId, siteId);
 
-            var productResource = new ProductResource(_apiContext);
-            var newProduct = await productResource.AddProductAsync(product);
+            var customerAccountResource = new CustomerAccountResource(_apiContext);
+            var newAccount = await customerAccountResource.AddAccountAndLoginAsync(account);
           
-            return newProduct;
+            return newAccount;
         }
 
-        public async Task<Mozu.Api.Contracts.ProductAdmin.Product> UpdateProduct(int tenantId, int? siteId,
-            int? masterCatalogId, Mozu.Api.Contracts.ProductAdmin.Product product)
+        public async Task<CustomerAccount> UpdateProduct(int tenantId, int? siteId,
+            int? masterCatalogId, CustomerAccount account)
         {
             _apiContext = new ApiContext(tenantId, siteId, masterCatalogId);
 
-            var productResource = new ProductResource(_apiContext);
-            var updatedProduct = await productResource.UpdateProductAsync(product, 
-                product.ProductCode, null);
+            var customerAccountResource = new CustomerAccountResource(_apiContext);
+            var updatedAccount = await customerAccountResource.UpdateAccountAsync(account, 
+                account.Id);
 
-            return updatedProduct;
+            return updatedAccount;
         }
     }
 }
