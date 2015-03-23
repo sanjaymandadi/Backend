@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 using Mozu.Api.Resources.Commerce.Catalog.Admin.Attributedefinition;
 using System.Linq;
+using System.Collections.Generic;
 using Mozu.Api.Contracts.ProductAdmin;
 
 namespace MozuDataConnector.Test
@@ -459,7 +460,7 @@ namespace MozuDataConnector.Test
 
             if (existingProductType != null)
             {
-                var productCode = "LUC-SUN-001";
+                var productCode = "LUC-SUN-003";
 
                 var productHandler = new MozuDataConnector.Domain.Handlers.ProductHandler();
                 var existingProduct = productHandler.GetProduct(_apiContext.TenantId, _apiContext.SiteId,
@@ -717,7 +718,7 @@ namespace MozuDataConnector.Test
             var customerHandler = new MozuDataConnector.Domain.Handlers.CustomerHandler(_apiContext.TenantId, _apiContext.SiteId,
                 _apiContext.MasterCatalogId);
 
-            var filter = "ExternalId eq " + "'m0038'";
+            var filter = "ExternalId eq " + "'m00349'";
 
             var account = customerHandler.GetCustomerAccounts(0,1,null, filter).Result;
 
@@ -729,23 +730,23 @@ namespace MozuDataConnector.Test
                     {
                          AcceptsMarketing = false,
                          CompanyOrOrganization = "Candles Unlimited Inc.",
-                         EmailAddress = "celine.wick2@mozu.com",
+                         EmailAddress = "alice.wick4@mozu.com",
                          ExternalId = "m0037",
-                         FirstName = "Celine", 
+                         FirstName = "Alice", 
                          LastName = "Wick", 
                          IsActive = true,
                          IsAnonymous = false,
                          LocaleCode = "en-US",
                          TaxExempt = false, 
                          IsLocked = false,
-                         UserName = "celine.wick2",
+                         UserName = "alice.wick4",
                          Contacts = new System.Collections.Generic
                              .List<Mozu.Api.Contracts.Customer.CustomerContact>() 
                              {
                                  new Mozu.Api.Contracts.Customer.CustomerContact()
                                  {
-                                      Email = "celine.wick2@mozu.com",
-                                      FirstName = "Celine", 
+                                      Email = "alice.wick4@mozu.com",
+                                      FirstName = "Alice", 
                                       LastNameOrSurname = "Wick",
                                       Label = "Mrs.",
                                       PhoneNumbers = new Mozu.Api.Contracts.Core.Phone()
@@ -812,14 +813,31 @@ namespace MozuDataConnector.Test
                     Code = "credit0001",
                     ActivationDate = System.DateTime.Now,
                     CreditType = "StoreCredit",
-                    CurrencyCode = "en-US",
+                    CurrencyCode = "USD",
                     CurrentBalance = 50m,
                     ExpirationDate = null,
-                    InitialBalance = 0m
+                    InitialBalance = 50m
+                };
+
+                var wishList = new Mozu.Api.Contracts.CommerceRuntime.Wishlists.Wishlist()
+                {
+                    IsImport = true,
+                    Name = "wishlist-001",
+                    Items = new List<Mozu.Api.Contracts.CommerceRuntime.Wishlists.WishlistItem>() 
+                        {
+                            new Mozu.Api.Contracts.CommerceRuntime.Wishlists.WishlistItem()
+                            {
+                                 Product = new Mozu.Api.Contracts.CommerceRuntime.Products.Product()
+                                 {
+                                      ProductCode = "LUC-SCF-001"
+                                 }
+                            }
+                        }
                 };
 
                 var newAccount = customerHandler.AddCustomerAccount(customerAccountAndAuthInfo, 
-                    credit).Result;
+                    credit, 
+                    wishList).Result;
             }
         }
     }
