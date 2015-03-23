@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mozu.Api.Resources.Commerce;
-using Mozu.Api.Resources.Commerce.Customer;
+using Mozu.Api.Contracts.CommerceRuntime.Wishlists;
 
 namespace MozuDataConnector.Domain.Handlers
 {
@@ -42,7 +42,7 @@ namespace MozuDataConnector.Domain.Handlers
             return accounts.Items;
         }
 
-        public async Task<CustomerAuthTicket> AddCustomerAccount(CustomerAccountAndAuthInfo account, Credit credit)
+        public async Task<CustomerAuthTicket> AddCustomerAccount(CustomerAccountAndAuthInfo account, Credit credit, Wishlist wishlist)
         {
             var notes = new List<string>();
 
@@ -57,7 +57,6 @@ namespace MozuDataConnector.Domain.Handlers
             foreach (var contact in account.Account.Contacts)
             {
                 contact.AccountId = newAccount.CustomerAccount.Id;
-
                 var newContact = await customerContactResource.AddAccountContactAsync(contact, 
                     newAccount.CustomerAccount.Id);
 
@@ -66,48 +65,36 @@ namespace MozuDataConnector.Domain.Handlers
             }
 
             var customerCreditResource = new CreditResource(_apiContext);
-
             credit.CustomerId = newAccount.CustomerAccount.Id;
-
             var newCredit = await customerCreditResource.AddCreditAsync(credit);
 
             notes.Add(string.Format("updatedby:{0},updatedDate:{1},action:{2}", newAccount.CustomerAccount.
                 AuditInfo.UpdateBy, newAccount.CustomerAccount.AuditInfo.UpdateDate, "AddCreditAsync"));
 
-            var customerNoteResource = new CustomerNoteResource(_apiContext);
-
-            foreach(var note in notes)
-            {
-                var newNote = await customerNoteResource.AddAccountNoteAsync(
-                    new CustomerNote()
-                    { 
-                        Content = note 
-                    },
-                    newAccount.CustomerAccount.Id);
-            }
-
-            var wishList = new Mozu.Api.Contracts.CommerceRuntime.Wishlists.Wishlist()
-                {
-                    CustomerAccountId = newAccount.CustomerAccount.Id,
-                    IsImport = true,
-                    Name = "wishlist-001",
-                    Items = new List<Mozu.Api.Contracts.CommerceRuntime.Wishlists.WishlistItem>() 
-                        {
-                            new Mozu.Api.Contracts.CommerceRuntime.Wishlists.WishlistItem()
-                            {
-                                 Product = new Mozu.Api.Contracts.CommerceRuntime.Products.Product()
-                                 {
-                                      ProductCode = "LUC-SCF-001"
-                                 }
-                            }
-                        }
-                };
             
             var wishListItemResource = new WishlistResource(_apiContext);
-            var newWishList = await wishListItemResource.CreateWishlistAsync(wishList);
+            wishlist.CustomerAccountId = newAccount.CustomerAccount.Id;
+            var newWishList = await wishListItemResource.CreateWishlistAsync(wishlist);
 
             notes.Add(string.Format("updatedby:{0},updatedDate:{1},action:{2}", newAccount.CustomerAccount.
                 AuditInfo.UpdateBy, newAccount.CustomerAccount.AuditInfo.UpdateDate, "CreateWishlistAsync"));
+
+
+            var customerSegmentResource = 
+                new Mozu.Api.Resources.Commerce.Customer.CustomerSegmentResource(_apiContext);
+
+//            var segmentAccount = await customerSegmentResource.AddSegmentAccountsAsync()
+
+            var customerNoteResource = new CustomerNoteResource(_apiContext);
+            foreach (var note in notes)
+            {
+                var newNote = await customerNoteResource.AddAccountNoteAsync(
+                    new CustomerNote()
+                    {
+                        Content = note
+                    },
+                    newAccount.CustomerAccount.Id);
+            }
 
             return newAccount;
         }
